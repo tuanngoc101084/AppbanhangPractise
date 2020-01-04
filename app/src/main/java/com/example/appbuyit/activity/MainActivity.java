@@ -16,6 +16,8 @@ import android.widget.ListView;
 import android.widget.ViewFlipper;
 
 import com.example.appbuyit.R;
+import com.example.appbuyit.adapter.Loaispadapter;
+import com.example.appbuyit.model.Loaisp;
 import com.google.android.material.navigation.NavigationView;
 import com.squareup.picasso.Picasso;
 
@@ -29,7 +31,8 @@ public class MainActivity extends AppCompatActivity {
     NavigationView navigationView;
     ListView listViewmanhinhchinh;
     DrawerLayout drawerLayout;
-
+    ArrayList<Loaisp> mangloaisp;
+    Loaispadapter loaispadapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,5 +83,8 @@ public class MainActivity extends AppCompatActivity {
         navigationView= findViewById(R.id.navigationview);
         listViewmanhinhchinh = findViewById(R.id.listviewmanhinhchinh);
         drawerLayout= findViewById(R.id.drawerlayout);
+        mangloaisp=new ArrayList<>();
+        loaispadapter= new Loaispadapter(mangloaisp,getApplicationContext());
+        listViewmanhinhchinh.setAdapter(loaispadapter);
     }
 }
