@@ -59,14 +59,13 @@ public class Loaispadapter extends BaseAdapter
         else
         {
             viewHolder=(ViewHolder) convertView.getTag();
-            Loaisp loaisp= (Loaisp) getItem(position);
-            viewHolder.txtTenloaisp.setText(loaisp.getTenloaisp());
-            Picasso.get().load(loaisp.getHinhanhloaisp())
-                    .placeholder(R.drawable.none)
-                    .error(R.drawable.loadfail)
-                    .into(viewHolder.imgloaisp);
-
         }
+        Loaisp loaisp= (Loaisp) getItem(position);
+        viewHolder.txtTenloaisp.setText(loaisp.getTenloaisp());
+        Picasso.get().load(loaisp.getHinhanhloaisp())
+                .placeholder(R.drawable.none)
+                .error(R.drawable.loadfail)
+                .into(viewHolder.imgloaisp);
         return convertView;
     }
 }

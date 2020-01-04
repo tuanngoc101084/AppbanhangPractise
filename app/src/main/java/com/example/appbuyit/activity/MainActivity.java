@@ -15,11 +15,23 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ViewFlipper;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.appbuyit.R;
 import com.example.appbuyit.adapter.Loaispadapter;
 import com.example.appbuyit.model.Loaisp;
+import com.example.appbuyit.ultil.Checkconnection;
+import com.example.appbuyit.ultil.Server;
 import com.google.android.material.navigation.NavigationView;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -33,14 +45,64 @@ public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
     ArrayList<Loaisp> mangloaisp;
     Loaispadapter loaispadapter;
+    int id;
+    String tenloaisp="";
+    String hinhanhloaisp="";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Anhxa();
-        Actionbar();
-        ActionViewFlipper();
+        if (Checkconnection.haveNetworkConnection(getApplicationContext()))
+        {
+            Actionbar();
+            ActionViewFlipper();
+            Getdulieuloaisp();
+        }
+        else
+        {
+            Checkconnection.ShowToast_Short(getApplicationContext(),"Ban hay kiem tra lai ket noi");
+            finish();
+        }
 
+
+    }
+
+    private void Getdulieuloaisp() {
+        RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
+        JsonArrayRequest  jsonArrayRequest= new JsonArrayRequest(Server.DươngdanLoaisp, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                  if (response!=null)
+                  {
+                      for(int i=0;i<response.length();i++)
+                      {
+                          try {
+                              JSONObject jsonObject= response.getJSONObject(i);
+                              id= jsonObject.getInt("id");
+                              tenloaisp= jsonObject.getString("tenloaisp");
+                              hinhanhloaisp= jsonObject.getString("hinhanhloaisp");
+                              mangloaisp.add(new Loaisp(id,tenloaisp,hinhanhloaisp));
+                              loaispadapter.notifyDataSetChanged();
+                          } catch (JSONException e) {
+                              e.printStackTrace();
+                          }
+                      }
+                  }
+                  else
+                  {
+                      Checkconnection.ShowToast_Short(getApplicationContext(),"Respon JSON is null");
+                  }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Checkconnection.ShowToast_Short(getApplicationContext(),error.toString());
+            }
+        });
+        requestQueue.add(jsonArrayRequest);
     }
 
     private void ActionViewFlipper() {
@@ -84,6 +146,7 @@ public class MainActivity extends AppCompatActivity {
         listViewmanhinhchinh = findViewById(R.id.listviewmanhinhchinh);
         drawerLayout= findViewById(R.id.drawerlayout);
         mangloaisp=new ArrayList<>();
+        mangloaisp.add(0,new Loaisp(0,"Trang chinh","http://icons.iconarchive.com/icons/graphicloads/colorful-long-shadow/128/Home-icon.png"));
         loaispadapter= new Loaispadapter(mangloaisp,getApplicationContext());
         listViewmanhinhchinh.setAdapter(loaispadapter);
     }
