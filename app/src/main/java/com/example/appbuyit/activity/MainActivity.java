@@ -78,17 +78,20 @@ public class MainActivity extends AppCompatActivity {
                   {
                       for(int i=0;i<response.length();i++)
                       {
-                          try {
-                              JSONObject jsonObject= response.getJSONObject(i);
-                              id= jsonObject.getInt("id");
-                              tenloaisp= jsonObject.getString("tenloaisp");
-                              hinhanhloaisp= jsonObject.getString("hinhanhloaisp");
-                              mangloaisp.add(new Loaisp(id,tenloaisp,hinhanhloaisp));
-                              loaispadapter.notifyDataSetChanged();
-                          } catch (JSONException e) {
-                              e.printStackTrace();
-                          }
+                      try {
+                          JSONObject jsonObject= response.getJSONObject(i);
+                          id= jsonObject.getInt("id");
+                          tenloaisp= jsonObject.getString("tenloaisp");
+                          hinhanhloaisp= jsonObject.getString("hinhanhloaisp");
+                          mangloaisp.add(new Loaisp(id,tenloaisp,hinhanhloaisp));
+                          loaispadapter.notifyDataSetChanged();
+                      } catch (JSONException e) {
+                          e.printStackTrace();
                       }
+
+                  }
+                          mangloaisp.add(3,new Loaisp(0,"Lien he","http://icons.iconarchive.com/icons/hopstarter/sleek-xp-basic/128/Chat-icon.png"));
+                          mangloaisp.add(4,new Loaisp(0,"Thong tin","http://icons.iconarchive.com/icons/tatice/cristal-intense/128/Information-icon.png"));
                   }
                   else
                   {
